@@ -35,7 +35,7 @@ public:
     virtual void init(PDFDoc * doc) = 0;
     //return true on success, false otherwise (e.g. need a fallback)
     virtual bool render_page(PDFDoc * doc, int pageno) = 0;
-    virtual void embed_image(int pageno) = 0;
+    virtual void embed_image(PDFDoc * doc, int pageno) = 0;
 
     // for proof output
 protected:

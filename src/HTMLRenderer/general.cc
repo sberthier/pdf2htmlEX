@@ -225,12 +225,12 @@ void HTMLRenderer::endPage() {
     {
         if (bg_renderer->render_page(cur_doc, pageNum))
         {
-            bg_renderer->embed_image(pageNum);
+            bg_renderer->embed_image(cur_doc, pageNum);
         }
         else if (fallback_bg_renderer)
         {
             if (fallback_bg_renderer->render_page(cur_doc, pageNum))
-                fallback_bg_renderer->embed_image(pageNum);
+                fallback_bg_renderer->embed_image(cur_doc, pageNum);
         }
     }
 

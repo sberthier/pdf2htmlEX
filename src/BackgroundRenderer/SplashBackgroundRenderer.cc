@@ -142,11 +142,19 @@ bool SplashBackgroundRenderer::render_page(PDFDoc * doc, int pageno)
     return true;
 }
 
-void SplashBackgroundRenderer::embed_image(int pageno)
+void SplashBackgroundRenderer::embed_image(PDFDoc * doc, int pageno)
 {
     // xmin->xmax is top->bottom
     int xmin, xmax, ymin, ymax;
-    getModRegion(&xmin, &ymin, &xmax, &ymax);
+
+    if(param.full_background) {
+        xmin = 0;
+        ymin = 0;
+        xmax = (int)doc->getPageCropWidth(pageno) * (param.h_dpi / DEFAULT_DPI);
+        ymax = (int)doc->getPageCropHeight(pageno) * (param.v_dpi / DEFAULT_DPI);
+    } else {
+        getModRegion(&xmin, &ymin, &xmax, &ymax);
+    }
 
     // dump the background image only when it is not empty
     if((xmin <= xmax) && (ymin <= ymax))

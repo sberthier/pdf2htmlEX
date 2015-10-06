@@ -195,7 +195,7 @@ bool CairoBackgroundRenderer::render_page(PDFDoc * doc, int pageno)
     return true;
 }
 
-void CairoBackgroundRenderer::embed_image(int pageno)
+void CairoBackgroundRenderer::embed_image(PDFDoc * doc, int pageno)
 {
     auto & f_page = *(html_renderer->f_curpage);
     

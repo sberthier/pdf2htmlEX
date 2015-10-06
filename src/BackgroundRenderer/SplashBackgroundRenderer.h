@@ -33,7 +33,7 @@ public:
 
   virtual void init(PDFDoc * doc);
   virtual bool render_page(PDFDoc * doc, int pageno);
-  virtual void embed_image(int pageno);
+  virtual void embed_image(PDFDoc * doc, int pageno);
 
   // Does this device use beginType3Char/endType3Char?  Otherwise,
   // text in Type 3 fonts will be drawn with drawChar/drawString.
