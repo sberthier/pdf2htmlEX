@@ -71,6 +71,9 @@ void show_version_and_exit(const char * dummy = nullptr)
 #ifdef ENABLE_LIBJPEG
     cerr << " jpg";
 #endif
+#if ENABLE_PPM
+    cerr << " ppm";
+#endif
 #if ENABLE_SVG
     cerr << " svg";
 #endif
@@ -314,6 +317,9 @@ void check_param()
 #endif
 #ifdef ENABLE_LIBJPEG
     else if (param.bg_format == "jpg") { }
+#endif
+#if ENABLE_PPM
+    else if(param.bg_format == "ppm") { }
 #endif
 #if ENABLE_SVG
     else if(param.bg_format == "svg") { }

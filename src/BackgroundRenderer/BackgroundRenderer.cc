@@ -32,6 +32,12 @@ std::unique_ptr<BackgroundRenderer> BackgroundRenderer::getBackgroundRenderer(co
         return std::unique_ptr<BackgroundRenderer>(new SplashBackgroundRenderer(format, html_renderer, param));
     }
 #endif
+#if ENABLE_PPM
+    if (format == "ppm")
+    {
+        return std::unique_ptr<BackgroundRenderer>(new SplashBackgroundRenderer(format, html_renderer, param));
+    }
+#endif
 #if ENABLE_SVG
     if (format == "svg")
     {
