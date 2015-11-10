@@ -1,0 +1,3 @@
+version=3
+opts="uversionmangle=s/$/\+ds/" \
+ https://github.com/coolwanglu/pdf2htmlEX/releases .*/v(\d[\d\.]*)\.tar\.gz

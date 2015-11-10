@@ -1,0 +1,3 @@
+Tests: test-naming
+Restrictions: allow-stderr
+Depends: pdf2htmlex, python

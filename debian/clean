@@ -1,0 +1,13 @@
+pdf2htmlEX.1
+share/base.css
+share/fancy.css
+share/pdf2htmlEX.js
+src/pdf2htmlEX-config.h
+src/util/css_const.h
+share/base.min.css
+share/fancy.min.css
+share/pdf2htmlEX.min.js
+logo/pdf2htmlEX-256x256.png
+logo/pdf2htmlEX-64x64.png
+share/pdf2htmlEX-64x64.png
+share/compatibility.js

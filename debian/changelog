@@ -1,0 +1,23 @@
+pdf2htmlex (0.14+bee-2) bee-buzziness; urgency=medium
+
+  * Upstream release: ppm format for background image
+
+ -- Sébastien Berthier <s.berthier@bee-buzziness.com>  Tue, 10 Nov 2015 08:35:52 +0100
+
+pdf2htmlex (0.14+bee-1.1) bee-buzziness; urgency=medium
+
+  * dependance fontforge 20151029
+
+ -- Sébastien Berthier <s.berthier@bee-buzziness.com>  Fri, 30 Oct 2015 13:38:52 +0100
+
+pdf2htmlex (0.14+bee-1) bee-buzziness; urgency=medium
+
+  * Non-maintainer upload.
+
+ -- Sébastien Berthier <s.berthier@bee-buzziness.com>  Thu, 29 Oct 2015 12:27:42 +0100
+
+pdf2htmlex (0.12+ds-1) unstable; urgency=medium
+
+  * Initial release. (Closes: #754460)
+
+ -- Johannes Schauer <j.schauer@email.de>  Tue, 05 Aug 2014 01:34:54 +0200

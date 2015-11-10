@@ -1,0 +1,10 @@
+#!/bin/sh
+set -exu
+
+export HOME=`pwd`/nonexistent
+export PDF2HTMLEX_TESTNODATADIR=yes
+export PDF2HTMLEX_EXECUTABLE=/usr/bin/pdf2htmlEX
+
+cp -a test/* "$ADTTMP"
+cd "$ADTTMP"
+python ./test_naming.py

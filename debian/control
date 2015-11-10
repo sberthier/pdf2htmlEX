@@ -1,0 +1,36 @@
+Source: pdf2htmlex
+Section: text
+Priority: optional
+Maintainer: Johannes Schauer <j.schauer@email.de>
+Build-Depends:
+ cmake (>= 2.6.0),
+ pkg-config,
+ debhelper (>= 9),
+ libpoppler-dev (>= 0.20.3),
+ libpoppler-private-dev,
+ libpng12-dev,
+ libjpeg-dev,
+ libfontforge-dev (>= 20151029+pdf2htmlex-1),
+ libspiro-dev,
+ python,
+ yui-compressor,
+ libjs-pdf,
+ pngnq,
+ librsvg2-bin,
+ closure-compiler
+Standards-Version: 3.9.5
+XS-Testsuite: autopkgtest
+Homepage: http://github.com/coolwanglu/pdf2htmlEX
+
+Package: pdf2htmlex
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libjs-pdf
+Suggests: ttfautohint
+Description: Converts PDF to HTML while retaining most formatting
+ pdf2htmlEX converts PDF to HTML while retaining text, format and style as much
+ as possible by making use of HTML5, JavaScript and modern CSS features.
+ Even difficult content like PDFs with embedded fonts, multicolumn documents,
+ scientific papers with complicated figures and mathematical formulas will
+ mostly be represented correctly. Fallback mode generates HTML pages which
+ do not require any JavaScript to view them correctly at the expense of a
+ larger file size.

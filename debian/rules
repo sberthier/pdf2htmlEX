@@ -1,0 +1,26 @@
+#!/usr/bin/make -f
+
+# we set $HOME to a non-existing directory because the testsuite runs
+# pdf2htmlEX which creates ~/.FontForge/ and we do not want to clutter
+# the users home directory during a build
+export HOME=$(CURDIR)/nonexistent
+
+%:
+	dh $@
+
+# using ENABLE_SVG requires CairoFontEngine, CairoRescaleBox and
+# CairoOutputDev from poppler sources
+#override_dh_auto_configure:
+#	dh_auto_configure -- -DENABLE_SVG=ON
+
+override_dh_auto_build:
+	dh_auto_build
+	cd logo && ./update_png.sh
+
+override_dh_auto_test:
+#	ln -s /usr/share/javascript/pdf/compatibility.js share/compatibility.js
+#	dh_auto_test
+
+#override_dh_auto_install:
+	#dh_auto_install
+	#ln -s /usr/share/javascript/pdf/compatibility.js debian/pdf2htmlex/usr/share/pdf2htmlEX/compatibility.js
