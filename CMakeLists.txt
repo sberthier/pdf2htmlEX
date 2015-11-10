@@ -6,6 +6,7 @@ project(pdf2htmlEX)
 cmake_minimum_required(VERSION 2.6.0 FATAL_ERROR)
 
 option(ENABLE_SVG "Enable SVG support, for generating SVG background images and converting Type 3 fonts" ON)
+option(ENABLE_PPM "Enable PPM support, for generating uncompressed background image" ON)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
@@ -51,6 +52,13 @@ if(ENABLE_SVG)
     include_directories(${FREETYPE_INCLUDE_DIRS})
     link_directories(${FREETYPE_LIBRARY_DIRS})
     set(PDF2HTMLEX_LIBS ${PDF2HTMLEX_LIBS} ${FREETYPE_LIBRARIES})
+endif()
+
+# build with ppm format as option for background image
+if(ENABLE_PPM)
+    set(ENABLE_PPM 1)
+else()
+    set(ENABLE_PPM 0)
 endif()
 
 # fontforge starts using pkg-config 'correctly' since 2.0.0

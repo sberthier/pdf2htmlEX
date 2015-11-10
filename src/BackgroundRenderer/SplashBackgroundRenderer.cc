@@ -13,6 +13,7 @@
 #include <goo/ImgWriter.h>
 #include <goo/PNGWriter.h>
 #include <goo/JpegWriter.h>
+#include <goo/NetPBMWriter.h>
 
 #include "Base64Stream.h"
 #include "util/const.h"
@@ -44,6 +45,11 @@ SplashBackgroundRenderer::SplashBackgroundRenderer(const string & imgFormat, HTM
     if (format.empty())
         format = "jpg";
     supported = supported || format == "jpg";
+#endif
+#if ENABLE_PPM
+    if (format.empty())
+        format = "ppm";
+    supported = supported || format == "ppm";
 #endif
     if (!supported)
     {
@@ -228,6 +234,12 @@ void SplashBackgroundRenderer::dump_image(const char * filename, int x1, int y1,
     else if(format == "jpg")
     {
         writer = unique_ptr<ImgWriter>(new JpegWriter);
+    }
+#endif
+#if ENABLE_PPM
+    else if(format == "ppm")
+    {
+        writer = unique_ptr<NetPBMWriter>(new NetPBMWriter);
     }
 #endif
     else

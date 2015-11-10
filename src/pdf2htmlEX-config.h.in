@@ -12,6 +12,7 @@
 #include <string>
 
 #define ENABLE_SVG @ENABLE_SVG@
+#define ENABLE_PPM @ENABLE_PPM@
 
 namespace pdf2htmlEX {
 
