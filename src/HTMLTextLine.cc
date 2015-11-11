@@ -297,6 +297,10 @@ void HTMLTextLine::dump_text(ostream & out)
         stack.pop_back();
     }
 
+    if (param.append_br)
+    {
+        out << "</br>";
+    }
     out << "</div>";
 }
 

@@ -43,6 +43,7 @@ struct Param
     int printing;
     int fallback;
     int tmp_file_size_limit;
+    int append_br;
 
     // fonts
     int embed_external_font;
