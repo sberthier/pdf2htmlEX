@@ -306,6 +306,20 @@ void ffw_add_empty_char(int32_t unicode, int width)
     SCSynchronizeWidth(sc, width, sc->width, cur_fv);
 }
 
+void ffw_move_char(int32_t unicode_from, int32_t unicode_to)
+{
+    SplineChar * sc = SFGetChar(cur_fv->sf, unicode_to, NULL);
+    if (sc) {
+      return;
+    }
+    sc = SFGetOrMakeChar(cur_fv->sf, unicode_from, NULL);
+    char buffer[400];
+    SCSetMetaData(sc,
+        strcopy(StdGlyphName(buffer, unicode_to,
+                cur_fv->sf->uni_interp, cur_fv->sf->for_new_glyphs)),
+        unicode_to, sc->comment);
+}
+
 int ffw_get_em_size(void)
 {
     return cur_fv->sf->ascent + cur_fv->sf->descent;

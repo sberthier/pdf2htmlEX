@@ -377,7 +377,7 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
 {
     if(param.debug)
     {
-        cerr << "Embed font: " << filepath << " " << info.id << endl;
+        cerr << "Embed font: " << filepath << " " << info.id  << "    " <<  font->getType() << "   " << font->getEncodingName()->getCString() << endl;
     }
 
     ffw_load_font(filepath.c_str());
@@ -437,6 +437,12 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
 
     used_map = preprocessor.get_code_map(hash_ref(font->getID()));
 
+    if(param.debug)
+    {
+        string _tmp_fn = (char*)str_fmt("%s/__tmp_f%llx__1.%s", param.tmp_dir.c_str(), info.id, "ttf");
+        tmp_files.add(_tmp_fn);
+        ffw_save(_tmp_fn.c_str());
+    }
     /*
      * Step 1
      * dump the font file directly from the font descriptor and put the glyphs into the correct slots *
@@ -481,7 +487,7 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
                 }
             }
         }
-        else
+        else if (!font->isSymbolic()) // dont touch encoding if font is symbolic
         {
             // move the slot such that it's consistent with the encoding seen in PDF
             unordered_set<string> nameset;
@@ -553,6 +559,13 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
         }
     }
 
+    if(param.debug)
+    {
+        string _tmp_fn = (char*)str_fmt("%s/__tmp_f%llx__2.%s", param.tmp_dir.c_str(), info.id, "ttf");
+        tmp_files.add(_tmp_fn);
+        ffw_save(_tmp_fn.c_str());
+    }
+
     /*
      * Step 2
      * - map charcode (or GID for CID truetype)
@@ -564,7 +577,6 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
      * 
      * - Fill in the width_list, and set widths accordingly
      */
-
 
     {
         string map_filename;
@@ -703,14 +715,58 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
             }
         }
 
-        ffw_set_widths(width_list.data(), max_key + 1, param.stretch_narrow_glyph, param.squeeze_wide_glyph);
-        
-        ffw_reencode_raw(cur_mapping.data(), max_key + 1, 1);
+        if(param.debug)
+        {
+            string _tmp_fn = (char*)str_fmt("%s/__tmp_f%llx_3.%s", param.tmp_dir.c_str(), info.id, "ttf");
+            tmp_files.add(_tmp_fn);
+            ffw_save(_tmp_fn.c_str());
+        }
+
+        if(!(font->getType() == fontType1 || font->getType() == fontType1COT || font->getType() == fontType1C)) { 
+            ffw_set_widths(width_list.data(), max_key + 1, param.stretch_narrow_glyph, param.squeeze_wide_glyph);
+            if(param.debug)
+            {
+                string _tmp_fn = (char*)str_fmt("%s/__tmp_f%llx_4.%s", param.tmp_dir.c_str(), info.id, "ttf");
+                tmp_files.add(_tmp_fn);
+                ffw_save(_tmp_fn.c_str());
+            }
+
+            ffw_reencode_raw(cur_mapping.data(), max_key + 1, 1);
+            if(param.debug)
+            {
+                string _tmp_fn = (char*)str_fmt("%s/__tmp_f%llx_5_raw.%s", param.tmp_dir.c_str(), info.id, "ttf");
+                tmp_files.add(_tmp_fn);
+                ffw_save(_tmp_fn.c_str());
+            }
+        //} else if (font->isSymbolic() || font->hasToUnicodeCMap()) { // second condition: auchan Il etait une fois ... mais casse d'autre document
+        //} else if (font->isSymbolic() && strncmp(font->getEncodingName()->getCString(), "WinAnsi", 7) == 0) { // second condition: auchan Il etait une fois ... mais casse d'autre document
+        } else if ((strncmp(font->getEncodingName()->getCString(), "Builtin", 7) == 0 
+            || strncmp(font->getEncodingName()->getCString(), "Custom", 6) == 0
+            || strncmp(font->getEncodingName()->getCString(), "WinAnsi", 7) == 0) && font->hasToUnicodeCMap()) {
+        //} else if (strncmp(font->getEncodingName()->getCString(), "Builtin", 7) == 0 || strncmp(font->getEncodingName()->getCString(), "WinAnsi", 7) == 0) {
+            ffw_reencode_raw(cur_mapping.data(), max_key + 1, 1);
+            if(param.debug)
+            {
+                string _tmp_fn = (char*)str_fmt("%s/__tmp_f%llx_5_raw.%s", param.tmp_dir.c_str(), info.id, "ttf");
+                tmp_files.add(_tmp_fn);
+                ffw_save(_tmp_fn.c_str());
+            }
+        }
+            /*
+        } else if(param.debug) {
+            string _tmp_fn = (char*)str_fmt("%s/__tmp_f%llx_5.%s", param.tmp_dir.c_str(), info.id, "ttf");
+            tmp_files.add(_tmp_fn);
+            ffw_save(_tmp_fn.c_str());
+        }*/
+
+        // a try to modify font (that work !)
+        //ffw_move_char((int)'T', (int)'a');
+
 
         // In some space offsets in HTML, we insert a ' ' there in order to improve text copy&paste
         // We need to make sure that ' ' is in the font, otherwise it would be very ugly if you select the text
         // Might be a problem if ' ' is in the font, but not empty
-        if(!has_space)
+        if(!has_space && !font->isSymbolic())
         {
             if(font_8bit)
             {
@@ -737,6 +793,9 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
         if(param.debug)
         {
             cerr << "space width: " << info.space_width << endl;
+            string _tmp_fn = (char*)str_fmt("%s/__tmp_f%llx_6.%s", param.tmp_dir.c_str(), info.id, "ttf");
+            tmp_files.add(_tmp_fn);
+            ffw_save(_tmp_fn.c_str());
         }
 
         if(ctu)
@@ -749,13 +808,17 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
      */
 
     // Reencode to Unicode Full such that FontForge won't ditch unicode values larger than 0xFFFF
-    ffw_reencode_unicode_full();
+
+    // dont remember why
+    //if(font->getType() != fontType1) { // has to check
+       ffw_reencode_unicode_full();
+    //}
 
     // Due to a bug of Fontforge about pfa -> woff conversion
     // we always generate TTF first, instead of the format specified by user
-    string cur_tmp_fn = (char*)str_fmt("%s/__tmp_font1.%s", param.tmp_dir.c_str(), "ttf");
+    string cur_tmp_fn = (char*)str_fmt("%s/__tmp_f%llx_1.%s", param.tmp_dir.c_str(), info.id, "ttf");
     tmp_files.add(cur_tmp_fn);
-    string other_tmp_fn = (char*)str_fmt("%s/__tmp_font2.%s", param.tmp_dir.c_str(), "ttf");
+    string other_tmp_fn = (char*)str_fmt("%s/__tmp_f%llx_2.%s", param.tmp_dir.c_str(), info.id, "ttf");
     tmp_files.add(other_tmp_fn);
 
     ffw_save(cur_tmp_fn.c_str());
